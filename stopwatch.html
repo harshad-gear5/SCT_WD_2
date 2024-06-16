@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Styling for the body */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: linear-gradient(120deg, #a6c0fe, #f68084); /* Gradient background */
+            font-family: 'Montserrat', sans-serif;
+            color: #333; /* Dark grey text color */
+            overflow: hidden; /* Prevent scrolling on overflow */
+            position: relative; /* Ensure position context */
+        }
+
+        /* Styling for the phrase */
+        .phrase {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for emphasis */
+            color: #fff; /* White text color */
+            position: absolute; /* Positioned absolutely */
+            top: 20px; /* Distance from the top */
+            left: 20px; /* Distance from the left */
+            transform: translateX(0); /* Initial translation */
+        }
+
+        /* Styling for each span within the phrase */
+        .phrase span {
+            margin-right: 5px; /* Spacing between spans */
+        }
+
+        /* Styling for the main container of the stopwatch */
+        .stopwatch-container {
+            text-align: center; /* Center-align content */
+            width: 400px; /* Width of the container */
+            height: 400px; /* Height of the container */
+            position: relative; /* Relative positioning */
+            margin-right: 50px; /* Margin for spacing */
+        }
+
+        /* Styling for the background of the stopwatch */
+        .stopwatch-background {
+            width: 100%;
+            height: 100%;
+            background-color: #333; /* Dark grey background */
+            border-radius: 50%; /* Rounded shape */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Shadow effect */
+        }
+
+        /* Styling for the stopwatch itself */
+        .stopwatch {
+            width: 80%; /* Width of the stopwatch */
+            height: 80%; /* Height of the stopwatch */
+            border-radius: 50%; /* Rounded shape */
+            background-color: #222; /* Dark grey background */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative; /* Relative positioning */
+        }
+
+        /* Styling for the display area of the stopwatch */
+        .display {
+            font-size: 2.5em; /* Large font size */
+            margin-bottom: 20px; /* Spacing at the bottom */
+            font-weight: bold; /* Bold text */
+            color: #fff; /* White text color */
+        }
+
+        /* Styling for the laps container */
+        .laps {
+            position: absolute; /* Absolute positioning */
+            bottom: 150px; /* Distance from the bottom */
+            right: 550px; /* Distance from the right */
+            max-height: 200px; /* Maximum height */
+            overflow-y: auto; /* Vertical scrolling */
+            border-top: 1px solid #f0f0f0; /* Light grey top border */
+            padding-top: 10px; /* Padding at the top */
+            background-color: #222; /* Dark grey background */
+            color: #fff; /* White text color */
+            border-radius: 5px; /* Rounded corners */
+            width: 200px; /* Width of the container */
+        }
+
+        /* Styling for each lap entry */
+        .laps div {
+            margin: 5px 0; /* Margin for each entry */
+            padding: 5px; /* Padding inside each entry */
+            border-bottom: 1px solid #f0f0f0; /* Light grey bottom border */
+        }
+
+        /* Styling for the heading of the stopwatch */
+        h1 {
+            font-size: 2.5em; /* Large font size */
+            margin-bottom: 20px; /* Spacing at the bottom */
+            font-weight: bold; /* Bold text */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for emphasis */
+            color: #fff; /* White text color */
+        }
+
+        /* Styling for the motivational message */
+        .message {
+            font-style: italic; /* Italic font style */
+            font-size: 1.2em; /* Medium font size */
+            color: #fff; /* White text color */
+            margin-top: 20px; /* Spacing at the top */
+            position: absolute; /* Absolute positioning */
+            bottom: -60px; /* Negative distance from the bottom */
+            left: 50%; /* Centered horizontally */
+            transform: translateX(-50%); /* Centered horizontally */
+        }
+
+        /* Styling for the fun element */
+        .fun-element {
+            position: absolute; /* Absolute positioning */
+            width: 250px; /* Width of the element */
+            height: 250px; /* Height of the element */
+            background-color: #fff; /* White background */
+            border-radius: 50%; /* Rounded shape */
+            top: 50%; /* Centered vertically */
+            left: 50%; /* Centered horizontally */
+            transform: translate(-50%, -50%); /* Centered horizontally and vertically */
+            animation: spin 10s linear infinite; /* Continuous spinning animation */
+        }
+
+        /* Keyframe animation for the spinning element */
+        @keyframes spin {
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg); /* Full rotation */
+            }
+        }
+
+        /* Styling for the container of the buttons */
+        .buttons-container {
+            position: absolute; /* Absolute positioning */
+            top: 50%; /* Centered vertically */
+            right: 250px; /* Distance from the right */
+            transform: translateY(-50%); /* Centered vertically */
+            display: flex;
+            flex-direction: column; /* Column layout for buttons */
+            align-items: center; /* Centered horizontally */
+            justify-content: center; /* Centered vertically */
+        }
+
+        /* Styling for each button */
+        .button {
+            margin: 10px 0; /* Margin around each button */
+            padding: 15px 30px; /* Padding inside each button */
+            font-size: 1.2em; /* Medium font size */
+            cursor: pointer; /* Pointer cursor */
+            color: #fff; /* White text color */
+            background-color: transparent; /* Transparent background */
+            border: 2px solid #000; /* Black border */
+            border-radius: 10px; /* Rounded corners */
+            font-weight: bold; /* Bold text */
+            transition: transform 0.2s, color 0.2s, border-color 0.2s, background-color 0.2s; /* Smooth transition */
+        }
+
+        /* Hover effect for buttons */
+        .button:hover {
+            transform: translateY(-2px); /* Move up slightly on hover */
+            background-color: rgba(0, 0, 0, 0.1); /* Light black background */
+        }
+
+        /* Active effect for buttons */
+        .button:active {
+            transform: translateY(0); /* Reset position on click */
+            background-color: rgba(0, 0, 0, 0.2); /* Darker black background */
+        }
+
+        /* Styling for the start button */
+        .button.start {
+            color: #4CAF50; /* Green text color */
+            border-color: #4CAF50; /* Green border color */
+        }
+
+        /* Hover effect for the start button */
+        .button.start:hover {
+            color: #fff; /* White text color on hover */
+            border-color: #4CAF50; /* Green border color on hover */
+        }
+
+        /* Styling for the pause button */
+        .button.pause {
+            color: #f44336; /* Red text color */
+            border-color: #f44336; /* Red border color */
+        }
+
+        /* Hover effect for the pause button */
+        .button.pause:hover {
+            color: #fff; /* White text color on hover */
+            border-color: #f44336; /* Red border color on hover */
+        }
+
+        /* Styling for the lap button */
+        .button.lap {
+            color: #ffc107; /* Yellow text color */
+            border-color: #ffc107; /* Yellow border color */
+        }
+
+        /* Hover effect for the lap button */
+        .button.lap:hover {
+            color: #fff; /* White text color on hover */
+            border-color: #ffc107; /* Yellow border color on hover */
+        }
+
+        /* Styling for the lap info section */
+        .lap-info {
+            position: absolute; /* Absolute positioning */
+            bottom: 20px; /* Distance from the bottom */
+            left: 50%; /* Centered horizontally */
+            transform: translateX(-50%); /* Centered horizontally */
+            text-align: center; /* Center-align text */
+        }
+
+        /* Styling for the lap info text */
+        .lap-info-text {
+            font-style: italic; /* Italic font style */
+            font-size: 1.2em; /* Medium font size */
+            color: #fff; /* White text color */
+        }
+    </style>
+</head>
+<body>
+    <!-- Phrase element for decoration -->
+    <div class="phrase">
+        <span>Skill</span>
+        <span>Craft</span>
+        <span>Stop</span>
+        <span>Watch</span>
+    </div>
+
+    <!-- Fun spinning element for visual appeal -->
+    <div class="fun-element"></div>
+
+    <!-- Main container for the stopwatch -->
+    <div class="stopwatch-container">
+        <div class="stopwatch-background">
+            <div class="stopwatch">
+                <!-- Heading for the stopwatch -->
+                <h1>STOP-WATCH</h1>
+                <!-- Display area for time -->
+                <div class="display" id="display">00:00:00.00</div>
+                <!-- Container for laps -->
+                <div class="laps" id="laps"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Motivational message for encouragement -->
+    <div class="message">You're doing great! Keep up the good work.</div>
+
+    <!-- Information about lap functionality -->
+    <div class="lap-info">
+        <p class="lap-info-text">The Lap button accurately tracks intervals and lap times.</p>
+    </div>
+
+    <!-- Container for control buttons -->
+    <div class="buttons-container">
+        <!-- Start/Pause button -->
+        <button class="button start" onclick="startStop()">Start</button>
+        <!-- Reset button -->
+        <button class="button reset" onclick="reset()">Reset</button>
+        <!-- Lap button -->
+        <button class="button lap" onclick="lap()">Lap</button>
+    </div>
+
+    <!-- JavaScript for stopwatch functionality -->
+    <script>
+        let startTime = 0;
+        let updatedTime = 0;
+        let difference = 0;
+        let timerInterval;
+        let running = false;
+        let laps = [];
+
+        const display = document.getElementById('display');
+        const lapsContainer = document.getElementById('laps');
+
+        function startStop() {
+            if (!running) {
+                startTime = Date.now() - difference;
+                timerInterval = setInterval(updateDisplay, 10);
+                running = true;
+                document.querySelector('.button.start').textContent = 'Pause';
+            } else {
+                clearInterval(timerInterval);
+                difference = Date.now() - startTime;
+                running = false;
+                document.querySelector('.button.start').textContent = 'Start';
+            }
+        }
+
+        function reset() {
+            clearInterval(timerInterval);
+            startTime = 0;
+            difference = 0;
+            running = false;
+            display.textContent = '00:00:00.00';
+            laps = [];
+            renderLaps();
+            document.querySelector('.button.start').textContent = 'Start';
+        }
+
+        function lap() {
+            if (running) {
+                laps.push(display.textContent);
+                renderLaps();
+            }
+        }
+
+        function updateDisplay() {
+            updatedTime = Date.now() - startTime;
+            display.textContent = formatTime(updatedTime);
+        }
+
+        function formatTime(time) {
+            let date = new Date(time);
+            let hours = String(date.getUTCHours()).padStart(2, '0');
+            let minutes = String(date.getUTCMinutes()).padStart(2, '0');
+            let seconds = String(date.getUTCSeconds()).padStart(2, '0');
+            let milliseconds = String(date.getUTCMilliseconds()).padStart(3, '0').slice(0, 2);
+            return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+        }
+
+        function renderLaps() {
+            lapsContainer.innerHTML = '';
+            laps.forEach((lap, index) => {
+                let lapElement = document.createElement('div');
+                lapElement.textContent = `Lap ${index + 1}: ${lap}`;
+                lapsContainer.appendChild(lapElement);
+            });
+        }
+    </script>
+</body>
+</html>
